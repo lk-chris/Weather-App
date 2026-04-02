@@ -1,0 +1,75 @@
+:root {
+  /* Neutral Colors */
+  --color-neutral-900: rgb(3, 1, 45);
+  --color-neutral-800: rgb(39, 37, 65);
+  --color-neutral-700: rgb(49, 47, 75);
+  --color-neutral-600: rgb(61, 59, 94);
+  --color-neutral-300: rgb(174, 174, 183);
+  --color-neutral-200: rgb(213, 212, 217);
+  --color-neutral-0: rgb(255, 255, 255);
+
+  /* Orange Colors */
+  --color-orange-500: rgb(255, 124, 10);
+
+  /* Blue Colors */
+  --color-blue-500: rgb(68, 85, 218);
+  --color-blue-700: rgb(45, 28, 156);
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: none;
+}
+body{
+    background-color: var(--color-neutral-900);
+    padding: 20px;
+    font-family: "Noto Sans", sans-serif;
+    color: var(--color-neutral-0);
+}
+
+header{
+    display: flex;
+    justify-content: space-between;
+}
+.units-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-neutral-700);
+    padding: 0px 10px;
+    gap: 8px;
+    height: 35px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.logo{
+    width: 160px;
+}
+.units-btn p{
+    color: var(--color-neutral-200);
+    font-size: 16px;
+}
+
+.welcome{
+    margin-top: 40px;
+}
+.welcome h1{
+    text-align: center;
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 70px;
+}
+.search{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+.search button{
+    padding: 15px 20px;
+    background-color: var(--color-blue-500);
+    color: var(--color-neutral-200);
+    font-weight: 600px;
+    font-size: 18px;
+    border-radius: 12px;
+}
