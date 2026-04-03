@@ -204,3 +204,49 @@ header{
 .forecast-temp-evening{
     color: var(--color-neutral-300);
 }
+
+/*hourly-forecast*/
+.weather-info-aside{
+    margin-top: 30px;
+    background-color: var(--color-neutral-800);
+    padding: 20px 20px;
+    border-radius: 15px;
+}
+.hourly-forecast-div{
+    display: flex;
+    justify-content: space-between;
+}
+.hourly-forecast{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.hourly-forecast-div h2{
+    font-weight: 600;
+}
+.hourly-forecast-div button{
+    background-color: var(--color-neutral-600);
+    color: var(--color-neutral-200);
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+.hourly-forecast-info{
+    background-color: var(--color-neutral-700);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(174, 174, 183, 0.103);
+}
+.hfi-lhs{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.hfi-lhs img{
+    width: 50px;
+}
