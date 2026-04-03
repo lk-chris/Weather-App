@@ -27,6 +27,9 @@ body{
     color: var(--color-neutral-0);
     min-height: 100vh;
 }
+body::-webkit-scrollbar{
+    display: none;
+}
 
 header{
     display: flex;
