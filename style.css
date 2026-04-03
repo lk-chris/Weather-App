@@ -138,3 +138,30 @@ header{
 .wi-img{
     width: 140px;
 }
+
+/*MINAMAL STATS*/
+.min-stats{
+    margin-top: 20px;
+    width: 100%;
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+}
+.min-stats div{
+    background-color: var(--color-neutral-800);
+    border: 1px solid var(--color-neutral-700);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px 20px;
+    border-radius: 20px;
+}
+.ms-header{
+    font-size: 18px;
+    color: var(--color-neutral-200);
+}
+.ms-temp{
+    font-size: 42px;
+    font-weight: 200;
+}
