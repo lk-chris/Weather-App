@@ -158,10 +158,10 @@ header{
     border-radius: 20px;
 }
 .ms-header{
-    font-size: 18px;
+    font-size: 20px;
     color: var(--color-neutral-200);
 }
-.ms-temp{
+.ms-info{
     font-size: 42px;
-    font-weight: 200;
+    font-weight: 400;
 }

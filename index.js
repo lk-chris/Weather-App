@@ -53,4 +53,4 @@ async function fetchCityWeather(cityName){
         console.error("Oops couldn't fetch city weather")
     }
 }
-console.log(fetchCityWeather("Accra"));
+console.log(fetchCityWeather("Berlin"));
