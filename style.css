@@ -247,6 +247,9 @@ header{
     align-items: center;
     gap: 10px;
 }
+.hfi-time{
+    font-size: 18px
+}
 .hfi-lhs img{
     width: 50px;
 }
