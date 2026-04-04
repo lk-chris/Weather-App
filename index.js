@@ -24,6 +24,7 @@ async function getWeatherData(lat, lon, name, country){
         const response = await fetch(cityCoords);
         const data = await response.json();
 
+        console.log(data)
         console.log('data recieved',data)
         let temp = data.current.temperature_2m;
         let tempUnit = data.current_units.temperature_2m;
@@ -34,6 +35,9 @@ async function getWeatherData(lat, lon, name, country){
         ui.windSpeed.textContent = `${data.current.wind_speed_10m}`;
         ui.city.textContent =`${name}`
         ui.country.textContent = `${country}`
+
+        // Date
+        ui.date.textContent = getFormattedDate(data.current.time)
 
         console.log(`Temperature in ${name} is ${temp} ${tempUnit}`)
     }catch(error){
@@ -87,3 +91,16 @@ ui.searchBtnEnter.addEventListener('submit', (e) => {
     fetchCityWeather(cityName);
     ui.search.value = "";
 })
+
+function getFormattedDate(apiDateString){
+    const dateObj = new Date(apiDateString)
+
+    const options = {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    }
+
+    return dateObj.toLocaleDateString('en-Us', options);
+}
