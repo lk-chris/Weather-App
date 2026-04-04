@@ -134,12 +134,12 @@ header{
     gap: 25px;
 }
 .overview-temp{
-    font-size: 72px;
+    font-size: 62px;
     font-style: italic;
     font-weight: 600;
 }
 .wi-img{
-    width: 140px;
+    width: 120px;
 }
 
 /*MINAMAL STATS*/
@@ -168,8 +168,9 @@ header{
     font-size: 42px;
     font-weight: 400;
 }
-.min-stats span{
+.suffix{
     color: var(--color-neutral-300);
+    font-size: 38px;
 }
 
 /*FORECAST*/
