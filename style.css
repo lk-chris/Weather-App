@@ -128,18 +128,27 @@ header{
     text-align: center;
 }
 .wi-weather-temp{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+    display: flex;         /* Sit side-by-side */
+  align-items: center;   /* Vertical alignment */
+  justify-content: center; /* Keep them centered in the card */
+  gap: 10px;            /* Give them some breathing room */
+  white-space: nowrap;
 }
 .overview-temp{
-    font-size: 62px;
+    font-size: 4rem; 
+    width: min-content;;
     font-style: italic;
-    font-weight: 600;
+    font-weight: 800;
+    white-space: nowrap;
+    display: flex;
+    align-items: flex-start;
 }
 .wi-img{
     width: 120px;
+    height: auto;
+}
+.unit {
+  font-size: 3rem;
 }
 
 /*MINAMAL STATS*/

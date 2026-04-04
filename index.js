@@ -12,25 +12,50 @@ const ui = {
     feelsLike: document.querySelector('.feels-like'),
     humidity: document.querySelector('.humidity'),
     windSpeed: document.querySelector('.wind-speed'),
-    precipitation: document.querySelector('.precipitation')
+    precipitation: document.querySelector('.precipitation'),
+    //Daily forecast
+    forecastDays: document.querySelectorAll('.forecast-day')
+}
+
+const weatherMap = {
+    0: 'icon-sunny.webp',           // clear skies
+    2: 'icon-partly-cloudy.webp',   // partly cloudy
+    3: 'icon-overcast.webp',        // Overcast
+    71: 'icon-snow.webp',            // snowing
+    53: 'icon-drizzle.webp',         // light rain
+    81: 'icon-rain.webp',           // light showers
+    82: 'icon-storm.webp',           // heavy rain
+    45: 'icon-fog.webp',             // foggy
 }
 
 
-
 async function getWeatherData(lat, lon, name, country){
-   let cityCoords = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature,precipitation&hourly=temperature_2m`;
+   let cityCoords = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
 
     try{
         const response = await fetch(cityCoords);
         const data = await response.json();
 
-        console.log(data)
+        //Overview Images
+        const code = data.current.weather_code;
+        const iconFile = weatherMap[code] || 'icon-overcast.webp';
+        console.log("API Weather Code:", code);
+        console.log("Mapped File:", iconFile);
+
+        if (iconFile) {
+            ui.weatherIcon.src = `./assets/images/${iconFile}`;
+        } else {
+            console.warn("No icon found for code:", code);
+            ui.weatherIcon.src = `./assets/images/icon-overcast.webp`; // Fallback
+        }
+
+
         console.log('data recieved',data)
+
+        // Overview Info & Stats Grid
         let temp = data.current.temperature_2m;
         let tempUnit = data.current_units.temperature_2m;
-
-
-        ui.temp.textContent = `${temp} ${tempUnit}`;
+        ui.temp.innerHTML = `${temp}<span class="unit">${tempUnit}</span>`;
         ui.humidity.textContent = `${data.current.relative_humidity_2m}`;
         ui.windSpeed.textContent = `${data.current.wind_speed_10m}`;
         ui.city.textContent =`${name}`
@@ -38,6 +63,25 @@ async function getWeatherData(lat, lon, name, country){
 
         // Date
         ui.date.textContent = getFormattedDate(data.current.time)
+
+        // Daily forecast
+        const daily = data.daily;
+        ui.forecastDays.forEach((dayCard, index) => {
+            const weekdayLabel = dayCard.querySelector('.forecast-weekday');
+            const dayIcon = dayCard.querySelector('.forecast-img');
+            const highTemp = dayCard.querySelector('.forecast-temp-high') 
+            const lowTemp = dayCard.querySelector('.forecast-temp-low')
+
+            if (!weekdayLabel || !highTemp || !lowTemp) return;
+
+            // 3. Injection
+            weekdayLabel.textContent = getFormattedDate(daily.time[index], true);
+            highTemp.textContent = `${Math.round(daily.temperature_2m_max[index])}°`;
+            lowTemp.textContent = `${Math.round(daily.temperature_2m_min[index])}°`;
+
+            const dayCode = daily.weather_code[index];
+            dayIcon.src = `./assets/images/${weatherMap[dayCode] || 'icon-overcast.webp'}`;
+        })
 
         console.log(`Temperature in ${name} is ${temp} ${tempUnit}`)
     }catch(error){
@@ -92,10 +136,12 @@ ui.searchBtnEnter.addEventListener('submit', (e) => {
     ui.search.value = "";
 })
 
-function getFormattedDate(apiDateString){
+function getFormattedDate(apiDateString, isShort = false){
     const dateObj = new Date(apiDateString)
 
-    const options = {
+    const options = isShort
+    ? { weekday: 'short'}
+    : {
         weekday: 'long',
         month: 'long',
         day: 'numeric',
