@@ -131,7 +131,7 @@ header{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 25px;
+    gap: 20px;
 }
 .overview-temp{
     font-size: 62px;
@@ -170,7 +170,7 @@ header{
 }
 .suffix{
     color: var(--color-neutral-300);
-    font-size: 38px;
+    font-size: 34px;
 }
 
 /*FORECAST*/
