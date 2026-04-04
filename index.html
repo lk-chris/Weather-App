@@ -34,18 +34,21 @@
 
   <section class="welcome">
     <h1>How's the sky looking today?</h1>
-    <div class="search">
+    <form action="" id="weather-form">
+      <div class="search">
       <img src="/assets/images/icon-search.svg" alt="">
       <input class="search-input" type="text" id="search-bar" placeholder="Search for a place...">
-      <button>Search</button>
+      <button class="search-btn">Search</button>
     </div>
+    </form>
+    
   </section>
 
   <section class="weather-info">
     <section class="weather-info-main">
       <div class="overview">
         <div class="city-date">
-          <p class="wi-city"></pc><span>Berlin</span>, <span>Germany</span></p>
+          <p class="wi-city"></pc><span class="wi-city-name">Berlin</span>, <span class="wi-country">Germany</span></p>
           <p class="wi-date">Friday, April 4, 2026</p>
         </div>
         <div class="wi-weather-temp">
@@ -56,19 +59,19 @@
       <div class="min-stats">
         <div class="ms-feels-like">
           <p class="ms-header">Feels Like</p>
-          <p class="ms-info">20 <span>°</span></p>
+          <p class="ms-info feels-like">20 <span>°</span></p>
         </div>
         <div class="ms-Humidity">
           <p class="ms-header">Humidity</p>
-          <p class="ms-info">46 <span>%</span></p>
+          <p class="ms-info humidity">46 <span>%</span></p>
         </div>
         <div class="ms-wind">
           <p class="ms-header">Wind</p>
-          <p class="ms-info">9 <span>mph</span></p>
+          <p class="ms-info wind-speed">9 <span>mph</span></p>
         </div>
         <div class="ms-percipitation">
           <p class="ms-header">Precipitation</p>
-          <p class="ms-info">0 <span>in</span></p>
+          <p class="ms-info precipitation">0 <span>in</span></p>
         </div>
       </div>
 
