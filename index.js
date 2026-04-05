@@ -160,10 +160,12 @@ async function fetchCityWeather(cityName){
         return
     }
     try{
+        showLoading();
         await getWeatherData(coords.lat, coords.lon, cityName, coords.country)
-
+        hideLoading();
     }catch(error){
         console.error("Oops couldn't fetch city weather")
+        hideLoading();
     }
 }
 
@@ -187,4 +189,24 @@ function getFormattedDate(apiDateString, isShort = false){
     }
 
     return dateObj.toLocaleDateString('en-Us', options);
+}
+
+// skeleton Logic
+function showLoading() {
+    // Grab the main overview card, the 4 stat boxes, and all forecast items
+    const cards = [
+        document.querySelector('.overview-card'), // The big main one
+        ...document.querySelectorAll('.ms-info'),  // The 4 small stats
+        ...ui.forecastDays,                       // The 7 day cards
+        ...ui.hourlyItems                         // The hourly sidebar items
+    ];
+
+    cards.forEach(card => {
+        if(card) card.classList.add('is-loading');
+    });
+}
+
+function hideLoading() {
+    const loadingCards = document.querySelectorAll('.is-loading');
+    loadingCards.forEach(card => card.classList.remove('is-loading'));
 }

@@ -269,3 +269,30 @@ header{
 .hfi-lhs img{
     width: 50px;
 }
+
+
+/* skeleton */
+/* 1. The Ghost Card Style */
+.is-loading {
+  background: rgba(255, 255, 255, 0.03) !important; /* Dim the background slightly */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  pointer-events: none; /* Stop user from clicking while loading */
+  position: relative;
+}
+
+/* 2. Hide ALL content inside the loading card */
+.is-loading > * {
+  visibility: hidden !important;
+  opacity: 0;
+}
+
+/* 3. Optional: Add a subtle pulse to the empty card so it doesn't look "dead" */
+.is-loading {
+  animation: ghostPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes ghostPulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
