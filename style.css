@@ -97,6 +97,9 @@ header{
     border-radius: 12px;
     border: none;
 }
+.search button:active{
+    opacity: 0.8;
+}
 
 /*OVERVIEW*/
 .overview{
