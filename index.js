@@ -191,11 +191,10 @@ function getFormattedDate(apiDateString, isShort = false){
     return dateObj.toLocaleDateString('en-Us', options);
 }
 
-// skeleton Logic
 function showLoading() {
     // Grab the main overview card, the 4 stat boxes, and all forecast items
     const cards = [
-        document.querySelector('.overview-card'), // The big main one
+        document.querySelector('.overview'), // The big main one
         ...document.querySelectorAll('.ms-info'),  // The 4 small stats
         ...ui.forecastDays,                       // The 7 day cards
         ...ui.hourlyItems                         // The hourly sidebar items

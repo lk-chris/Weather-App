@@ -271,28 +271,77 @@ header{
 }
 
 
-/* skeleton */
-/* 1. The Ghost Card Style */
-.is-loading {
-  background: rgba(255, 255, 255, 0.03) !important; /* Dim the background slightly */
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  pointer-events: none; /* Stop user from clicking while loading */
-  position: relative;
-}
+/* --- Skeleton Loading State --- */
 
-/* 2. Hide ALL content inside the loading card */
-.is-loading > * {
-  visibility: hidden !important;
-  opacity: 0;
-}
-
-/* 3. Optional: Add a subtle pulse to the empty card so it doesn't look "dead" */
 .is-loading {
+  pointer-events: none !important;
   animation: ghostPulse 1.5s infinite ease-in-out;
+}
+
+.is-loading > *:not(.loading-state) {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.overview.is-loading {
+  position: relative;
+  background-image: none !important;
+  background-color: var(--color-neutral-800) !important;
+}
+
+.ms-info.is-loading::after {
+  content: "-";
+  visibility: visible;
+  display: block;
+  font-size: 20px;
+  color: var(--color-neutral-0);
+}
+
+.loading-state {
+  display: none;
+  position: absolute;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.overview.is-loading .loading-state {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.loading-state .dots {
+  display: flex;
+  gap: 8px;
+}
+
+.loading-state .dots span {
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-neutral-0);
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-state .dots span:nth-child(1) { animation-delay: -0.32s; }
+.loading-state .dots span:nth-child(2) { animation-delay: -0.16s; }
+
+.loading-state p {
+  color: var(--color-neutral-200);
+  font-size: 16px;
+  font-weight: 500;
 }
 
 @keyframes ghostPulse {
   0% { opacity: 1; }
   50% { opacity: 0.6; }
   100% { opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
 }
