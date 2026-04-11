@@ -8,6 +8,8 @@ const ui = {
     date: document.querySelector('.wi-date'),
     temp: document.querySelector('.overview-temp'),
     weatherIcon: document.querySelector('.wi-img'),
+    search: document.querySelector('.search-input'),
+    suggestions: document.querySelector('.drop-down'),
     //Stats grid
     feelsLike: document.querySelector('.feels-like'),
     humidity: document.querySelector('.humidity'),
@@ -167,6 +169,67 @@ async function fetchCityWeather(cityName){
         console.error("Oops couldn't fetch city weather")
         hideLoading();
     }
+}
+
+// Search Suggestion
+let debounceTimer;
+ui.search.addEventListener('input', (e) => {
+    const query = e.target.value.trim();
+    clearTimeout(debounceTimer);
+
+    if (query.length < 2) {
+        ui.suggestions.classList.add('hidden');
+        return;
+    }
+
+    debounceTimer = setTimeout(() => fetchSuggestions(query), 300);
+});
+
+async function fetchSuggestions(query) {
+    const url = `https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=5&language=en&format=json`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json(); // CRITICAL: Added await
+        
+        if (data.results) {
+            renderSuggestions(data.results);
+        } else {
+            ui.suggestions.classList.add('hidden');
+        }
+    } catch (err) { console.error(err); }
+}
+
+function renderSuggestions(cities) {
+    ui.suggestions.innerHTML = '';
+    ui.suggestions.classList.remove('hidden');
+
+    cities.forEach(city => {
+        const div = document.createElement('div');
+        div.className = 'city-search';
+        div.innerHTML = `<p>${city.name}, <span>${city.country || ''}</span></p>`;
+        
+        div.addEventListener('click', () => {
+            ui.search.value = `${city.name}, ${city.country || ''}`;
+            ui.suggestions.classList.add('hidden');
+            fetchCityWeather(city.name); // Triggers the loading state flow
+        });
+        ui.suggestions.appendChild(div);
+    });
+}
+
+// 3. Coordinate Loading States
+function showLoading() {
+    const cards = [
+        document.querySelector('.overview'),
+        ...document.querySelectorAll('.ms-info'),
+        ...ui.forecastDays,
+        ...ui.hourlyItems
+    ];
+    cards.forEach(card => card?.classList.add('is-loading'));
+}
+
+function hideLoading() {
+    document.querySelectorAll('.is-loading').forEach(card => card.classList.remove('is-loading'));
 }
 
 ui.searchBtnEnter.addEventListener('submit', (e) => {
