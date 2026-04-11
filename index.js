@@ -10,6 +10,8 @@ const ui = {
     weatherIcon: document.querySelector('.wi-img'),
     search: document.querySelector('.search-input'),
     suggestions: document.querySelector('.drop-down'),
+    unitBtn: document.querySelector('.units-btn'),
+    unitDropdown: document.querySelector('.units-dropdown'),
     //Stats grid
     feelsLike: document.querySelector('.feels-like'),
     humidity: document.querySelector('.humidity'),
@@ -182,7 +184,7 @@ ui.search.addEventListener('input', (e) => {
         return;
     }
 
-    debounceTimer = setTimeout(() => fetchSuggestions(query), 300);
+    debounceTimer = setTimeout(() => fetchSuggestions(query), 200);
 });
 
 async function fetchSuggestions(query) {
@@ -272,3 +274,18 @@ function hideLoading() {
     const loadingCards = document.querySelectorAll('.is-loading');
     loadingCards.forEach(card => card.classList.remove('is-loading'));
 }
+
+
+// DROPDOWNS
+
+ui.unitBtn.addEventListener('click', (event) => {
+    let element = ui.unitDropdown;
+    
+    if (element.classList.contains('hidden')){
+        element.classList.remove('hidden')
+        element.classList.add('active')
+    }else{
+        element.classList.add('hidden')
+        element.classList.remove('active')
+    }
+})

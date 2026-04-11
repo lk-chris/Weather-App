@@ -34,11 +34,12 @@ body::-webkit-scrollbar{
 header{
     display: flex;
     justify-content: space-between;
+    position: relative;
 }
 .units-btn{
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     background-color: var(--color-neutral-700);
     padding: 0px 10px;
     gap: 8px;
@@ -46,11 +47,37 @@ header{
     border-radius: 5px;
     cursor: pointer;
 }
+.units-dropdown{
+    position: absolute;
+    right: 0;
+    top: 150%;
+    background-color: var(--color-neutral-800);
+    padding: 10px;
+    border-radius: 8px;
+    min-width: 200px;
+    z-index: 100;
+}
+.units-dropdown-header{
+    font-weight: 600;
+}
+.drop-down-unit{
+    color: var(--color-neutral-0);
+}
+.units-div{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.units-header{
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: var(--color-neutral-300);
+}
 .logo{
     width: 160px;
 }
 .units-btn p{
-    color: var(--color-neutral-200);
     font-size: 16px;
 }
 
@@ -88,6 +115,15 @@ header{
     top: 14px;
     left: 18px;
 }
+.city-search {
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-neutral-700);
+}
+
+.city-search:hover {
+  background-color: var(--color-neutral-600);
+}
 .search button{
     padding: 15px 20px;
     background-color: var(--color-blue-500);
@@ -100,6 +136,9 @@ header{
 .search button:active{
     opacity: 0.8;
 }
+
+
+/*UNITS DROP DOWN*/
 .drop-down {
   position: absolute;
   top: 50%;
@@ -114,17 +153,18 @@ header{
   box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
-.city-search {
-  padding: 12px 20px;
-  cursor: pointer;
-  border-bottom: 1px solid var(--color-neutral-700);
-}
-
-.city-search:hover {
-  background-color: var(--color-neutral-600);
-}
-
 .hidden { display: none !important; }
+.active{
+    display: block;
+}
+
+.units-div img{
+    opacity: 0;
+    transition: opacity 0.2 ease;
+}
+.units-div .is-selected img{
+    opacity: 1;
+}
 
 /*OVERVIEW*/
 .overview{
