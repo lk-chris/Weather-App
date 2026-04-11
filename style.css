@@ -46,6 +46,11 @@ header{
     height: 35px;
     border-radius: 5px;
     cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.units-btn:active{
+    opacity: 0.7;
 }
 .units-dropdown{
     position: absolute;
