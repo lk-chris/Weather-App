@@ -317,3 +317,15 @@ ui.dropDownOpt.forEach((option) => {
         fetchCityWeather(renewedCity);
     })
 })
+
+// Dropdown close
+document.addEventListener('click', (event) => {
+    const isClickInsideDropdown = event.target.closest('.units-dropdown');
+
+    const isClickOnButton = event.target.closest('.units-btn')
+
+    if(!isClickInsideDropdown && !isClickOnButton){
+        ui.unitDropdown.classList.add('hidden');
+        ui.unitDropdown.classList.remove('active');
+    }
+})
