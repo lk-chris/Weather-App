@@ -12,11 +12,14 @@ const ui = {
     suggestions: document.querySelector('.drop-down'),
     unitBtn: document.querySelector('.units-btn'),
     unitDropdown: document.querySelector('.units-dropdown'),
+    dropDownOpt: document.querySelectorAll('.units-div .units-btn'),
     //Stats grid
     feelsLike: document.querySelector('.feels-like'),
     humidity: document.querySelector('.humidity'),
     windSpeed: document.querySelector('.wind-speed'),
     precipitation: document.querySelector('.precipitation'),
+    suffix: document.querySelector('.ms-wind .suffix'),
+    precipSuffix: document.querySelector('.ms-precipitation .suffix'),
     //Daily forecast
     forecastDays: document.querySelectorAll('.forecast-day'),
     //Hourly forecast
@@ -36,7 +39,14 @@ const weatherMap = {
 
 
 async function getWeatherData(lat, lon, name, country){
-    let cityCoords = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&timezone=auto`;
+    const tempUnit = document.querySelector('.units-btn.is-selected[data-type="temperature_unit"]').dataset.value;
+
+    const windUnit = document.querySelector('.units-btn.is-selected[data-type="wind_unit"]').dataset.value;
+
+    const precipUnit = document.querySelector('.units-btn.is-selected[data-type="precipitation_unit"]').dataset.value;
+
+    let cityCoords = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,relative_humidity_2m,apparent_temperature,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&timezone=auto&temperature_unit=${tempUnit}&wind_speed_unit=${windUnit}&precipitation_unit=${precipUnit}`;
+
 
     try{
         const response = await fetch(cityCoords);
@@ -61,11 +71,14 @@ async function getWeatherData(lat, lon, name, country){
         // Overview Info & Stats Grid
         let temp = data.current.temperature_2m;
         let tempUnit = data.current_units.temperature_2m;
-        ui.temp.innerHTML = `${temp}<span class="unit">${tempUnit}</span>`;
+        ui.temp.innerHTML = `${temp}°`;
         ui.humidity.textContent = `${data.current.relative_humidity_2m}`;
         ui.windSpeed.textContent = `${data.current.wind_speed_10m}`;
         ui.city.textContent =`${name}`
-        ui.country.textContent = `${country}`
+        ui.country.textContent = `${country}`;
+        ui.suffix.textContent = data.current_units.wind_speed_10m;
+        ui.precipSuffix.textContent = data.current_units.precipitation;
+    
 
         // Date
         ui.date.textContent = getFormattedDate(data.current.time)
@@ -288,4 +301,19 @@ ui.unitBtn.addEventListener('click', (event) => {
         element.classList.add('hidden')
         element.classList.remove('active')
     }
+})
+
+ui.dropDownOpt.forEach((option) => {
+    option.addEventListener('click', (e)=> {
+        const clickedType = e.currentTarget.dataset.type;
+        const oldActiveBtn = document.querySelector(`.units-btn.is-selected[data-type = "${clickedType}"]`)
+
+        if (oldActiveBtn){
+            oldActiveBtn.classList.remove('is-selected')
+        }
+
+        e.currentTarget.classList.add('is-selected');
+        let renewedCity = ui.city.textContent;
+        fetchCityWeather(renewedCity);
+    })
 })
