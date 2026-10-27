@@ -84,6 +84,60 @@
     </form>
   </section>
 
+  <!-- NAVIGATION HISTORY STACK SECTION -->
+  <section class="stack-nav-section">
+    <div class="stack-toolbar">
+      <div class="stack-nav-buttons">
+        <button type="button" id="stack-back-btn" class="stack-control-btn" title="Pop current city from stack to go back" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Back (Pop)</span>
+        </button>
+        <button type="button" id="stack-forward-btn" class="stack-control-btn" title="Navigate forward in history" disabled>
+          <span>Forward</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <div class="stack-meta-info">
+        <span class="stack-depth-tag"><span class="stack-dot"></span> <span id="stack-depth-label">Stack Depth: 1</span></span>
+        <span class="stack-lifo-tag">LIFO Stack</span>
+        <span id="stack-last-action" class="stack-action-pill">INIT(Berlin)</span>
+      </div>
+
+      <div class="stack-toolbar-actions">
+        <button type="button" id="toggle-stack-inspector-btn" class="stack-toggle-btn active" title="Toggle Stack Inspector View">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span>Stack Inspector</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- VISUAL STACK INSPECTOR DRAWER -->
+    <div id="stack-inspector-card" class="stack-inspector-card">
+      <div class="stack-card-header">
+        <div class="sch-left">
+          <h4>Navigation History Stack (LIFO)</h4>
+          <p>Real-time visual representation of the application's view state stack. New searches are <strong>pushed</strong> to TOP; Back <strong>pops</strong> the top frame to reveal the previous city.</p>
+        </div>
+        <div class="sch-right">
+          <button type="button" id="stack-reset-btn" class="stack-reset-btn" title="Clear stack down to root">Reset to Base</button>
+        </div>
+      </div>
+
+      <div class="stack-container">
+        <div class="stack-top-pointer">
+          <span class="pointer-badge">&#9660; TOP OF STACK (Active View / Peek)</span>
+        </div>
+        <div id="stack-frames-list" class="stack-frames-list">
+          <!-- Dynamically populated via index.js -->
+        </div>
+        <div class="stack-base-pointer">
+          <span>&#9650; STACK BASE (Root Location)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="weather-info">
     <section class="weather-info-main">
       <div class="overview">

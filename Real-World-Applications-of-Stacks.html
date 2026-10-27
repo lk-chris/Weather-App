@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real-World Applications of Stacks</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 13mm 15mm 13mm 15mm;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      color: #1e293b;
+      line-height: 1.38;
+      font-size: 8.9pt;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 5px;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 14pt;
+      margin: 0 0 3px 0;
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+    .meta {
+      font-size: 8.2pt;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+    }
+    .meta a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h2 {
+      font-size: 10pt;
+      color: #1d4ed8;
+      margin: 10px 0 5px 0;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    p {
+      margin: 0 0 5px 0;
+      text-align: justify;
+    }
+    ul {
+      margin: 0 0 7px 0;
+      padding-left: 18px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    strong {
+      color: #0f172a;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .card {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid #2563eb;
+      padding: 7px 9px;
+      border-radius: 4px;
+    }
+    .card h3 {
+      font-size: 8.8pt;
+      margin: 0 0 2px 0;
+      color: #1d4ed8;
+    }
+    .card p {
+      font-size: 8.3pt;
+      margin: 0;
+    }
+    .project-box {
+      background-color: #eff6ff;
+      border: 1px solid #dbeafe;
+      border-left: 3px solid #2563eb;
+      padding: 9px 12px;
+      border-radius: 4px;
+      margin-top: 5px;
+    }
+    .project-box h3 {
+      margin: 0 0 3px 0;
+      font-size: 9.6pt;
+      color: #1e40af;
+    }
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 8.6pt;
+      margin-top: 6px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .dot {
+      color: #2563eb;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Real-World Applications of Stacks as a Data Structure</h1>
+    <div class="meta">
+      <span><strong>Assignment:</strong> Data Structures &amp; System Implementation</span>
+      <span><strong>Repository:</strong> <a href="https://github.com/lk-chris/Weather-App">github.com/lk-chris/Weather-App</a></span>
+    </div>
+  </header>
+
+  <h2>1. What is a Stack &amp; Why is it Necessary?</h2>
+  <p>
+    A <strong>Stack</strong> is a linear data structure that operates on the <strong>Last-In, First-Out (LIFO)</strong> principle: whatever was placed into the stack most recently is always the first element removed, just like a stack of plates or trays. Adding an element is called <code>push</code> (placed at the top), and removing an element is called <code>pop</code> (retrieved from the top). Both operations, along with inspecting the top element with <code>peek</code>, execute in instantaneous <em>O(1)</em> constant time.
+  </p>
+  <p>
+    <strong>Why Stacks are Necessary in Computing:</strong>
+  </p>
+  <ul>
+    <li><strong>Execution Context &amp; Function Calls (The Call Stack):</strong> When programs run nested or recursive functions, the computer must remember where to return when each function finishes. A stack records each active function frame on top and pops it when the function completes, keeping memory execution orderly.</li>
+    <li><strong>Reversible State Management (Undo / Redo &amp; History):</strong> Applications frequently require users to step backward through actions. By pushing each action or screen state onto a stack, the previous state is always preserved right beneath the top, making reversal a simple single-step pop.</li>
+    <li><strong>Syntax Parsing &amp; Delimiter Matching (Expression Validation):</strong> Compilers and code linters check nested brackets like <code>{ [ ( ) ] }</code>. Opening symbols are pushed to the stack and popped when closing symbols match. Any leftover or mismatched symbol immediately catches syntax errors.</li>
+    <li><strong>Algorithmic Backtracking (Depth-First Search):</strong> When searching through mazes, decision trees, or network paths, a stack records the route explored so an algorithm can cleanly backtrack to the most recent decision point whenever it reaches a dead end.</li>
+  </ul>
+
+  <h2>2. Real-World Applications of Stacks</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>1. Browser Navigation History</h3>
+      <p>Browsers push visited URLs onto a history stack; pressing the "Back" button pops the top page to reveal and restore the preceding one.</p>
+    </div>
+    <div class="card">
+      <h3>2. Text Editor Undo/Redo Engine</h3>
+      <p>Every keystroke, paste, or deletion is pushed onto an undo stack. Pressing Ctrl+Z pops the latest operation to restore prior document state.</p>
+    </div>
+    <div class="card">
+      <h3>3. Runtime Call Stack &amp; Recursion</h3>
+      <p>Language runtimes allocate execution frames on a call stack to track function arguments, local variables, and return addresses safely.</p>
+    </div>
+    <div class="card">
+      <h3>4. Syntax Analysis &amp; Expression Parsing</h3>
+      <p>Compilers use stacks to convert infix arithmetic into postfix notation (Reverse Polish) and verify that code delimiters open and close properly.</p>
+    </div>
+  </div>
+
+  <h2>3. Selected Application to Develop: Weather Dashboard &amp; Navigation History Stack</h2>
+  <div class="project-box">
+    <h3>Application Overview &amp; Stack Architecture</h3>
+    <p>
+      The application is a <strong>Weather Forecast Dashboard</strong> that integrates a <strong>dual-stack navigation engine</strong> (<code>historyStack</code> and <code>forwardStack</code>) to manage user location searches and screen transitions through the <strong>LIFO (Last-In, First-Out)</strong> principle. As users search and explore weather across various global cities, each location snapshot is <strong>pushed</strong> onto the navigation history stack. When users click the "Back" button, the active city is <strong>popped</strong> from the top of the stack and transferred to the forward stack, seamlessly restoring the previous city to the view in <em>O(1)</em> time.
+    </p>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <span class="dot">&bull;</span>
+        <span><strong>Live Stack Visualization &amp; Depth Counter:</strong> Renders real-time stack depth (<code>Stack Depth: N</code>) and visibly marks the topmost active frame (<code>TOP / PEEK (Active View)</code>), demonstrating true LIFO state behavior.</span>
+      </div>
+      <div class="feature-item">
+        <span class="dot">&bull;</span>
+        <span><strong>Push Operation (City Search &amp; Visit):</strong> Captures weather metrics for newly searched locations, pushing a new state frame to the top of the history stack and resetting the forward stack.</span>
+      </div>
+      <div class="feature-item">
+        <span class="dot">&bull;</span>
+        <span><strong>Pop Operation (Back Navigation):</strong> Pops the active city off the top of the stack and reveals the previous location with zero redundant API calls, updating the active viewport instantly.</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
