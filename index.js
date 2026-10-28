@@ -181,8 +181,8 @@ async function fetchCityWeather(cityName, isStackPush = true){
         showLoading();
         const weatherInfo = await getWeatherData(coords.lat, coords.lon, cityName, coords.country);
         hideLoading();
-        if (isStackPush && weatherInfo && typeof navStack !== 'undefined') {
-            navStack.push({
+        if (isStackPush && weatherInfo && typeof searchStack !== 'undefined') {
+            searchStack.push({
                 name: weatherInfo.name,
                 country: weatherInfo.country,
                 temp: weatherInfo.temp
@@ -340,80 +340,56 @@ document.addEventListener('click', (event) => {
     }
 })
 
+
+
 /* =========================================================
-   NAVIGATION HISTORY STACK IMPLEMENTATION (LIFO)
+   SEARCH QUERY & LOCATION HISTORY STACK (LIFO)
    ========================================================= */
 
-class NavigationHistoryStack {
-    constructor(initialItem = null) {
+class SearchHistoryStack {
+    constructor(initialLocation = null) {
         this.stack = [];
         this.forwardStack = [];
-        this.lastAction = 'INIT(Berlin)';
-        
-        if (initialItem) {
-            this.push(initialItem, false);
+        if (initialLocation) {
+            this.push(initialLocation, false);
         }
     }
 
-    push(item, shouldClearForward = true) {
-        // Prevent duplicate consecutive top entries
-        const currentTop = this.peek();
-        if (currentTop && currentTop.name.toLowerCase() === item.name.toLowerCase()) {
-            if (item.temp) currentTop.temp = item.temp;
-            this.render();
+    push(item, clearForward = true) {
+        const top = this.peek();
+        if (top && top.name.toLowerCase() === item.name.toLowerCase()) {
+            if (item.temp) top.temp = item.temp;
+            this.renderDropdown();
             return;
         }
 
-        const stackItem = {
-            id: 'frame-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+        this.stack.push({
             name: item.name,
             country: item.country || '',
             temp: item.temp || '--',
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-        };
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
 
-        this.stack.push(stackItem);
-        if (shouldClearForward) {
+        if (clearForward) {
             this.forwardStack = [];
         }
-        this.lastAction = 'PUSH(' + item.name + ')';
-        this.render();
+        this.renderDropdown();
     }
 
     pop() {
-        if (this.stack.length <= 1) {
-            console.warn("Stack Underflow Guard: Cannot pop base location from navigation stack.");
-            return null;
-        }
+        if (this.stack.length <= 1) return null;
         const popped = this.stack.pop();
         this.forwardStack.push(popped);
-        this.lastAction = 'POP(' + popped.name + ')';
-        this.render();
+        this.renderDropdown();
         return this.peek();
     }
 
-    forward() {
-        if (this.forwardStack.length === 0) {
-            return null;
-        }
-        const item = this.forwardStack.pop();
-        this.stack.push(item);
-        this.lastAction = 'FORWARD(' + item.name + ')';
-        this.render();
-        return item;
-    }
-
-    popTo(targetId) {
-        if (this.stack.length <= 1) return null;
-        const targetIndex = this.stack.findIndex(frame => frame.id === targetId);
-        if (targetIndex === -1 || targetIndex === this.stack.length - 1) return null;
-
+    popTo(targetIndex) {
+        if (targetIndex < 0 || targetIndex >= this.stack.length - 1) return null;
         while (this.stack.length - 1 > targetIndex) {
-            const popped = this.stack.pop();
-            this.forwardStack.push(popped);
+            this.forwardStack.push(this.stack.pop());
         }
-        this.lastAction = 'POP_TO(' + this.peek().name + ')';
-        this.render();
+        this.renderDropdown();
         return this.peek();
     }
 
@@ -425,127 +401,126 @@ class NavigationHistoryStack {
         return this.stack.length;
     }
 
-    resetToBase() {
-        if (this.stack.length <= 1) return null;
-        const root = this.stack[0];
-        while (this.stack.length > 1) {
-            this.forwardStack.push(this.stack.pop());
+    clearHistory() {
+        if (this.stack.length > 1) {
+            const current = this.peek();
+            this.stack = [current];
+            this.forwardStack = [];
+            this.renderDropdown();
         }
-        this.lastAction = 'RESET(' + root.name + ')';
-        this.render();
-        return root;
     }
 
-    render() {
-        const depthLabel = document.getElementById('stack-depth-label');
-        const lastActionEl = document.getElementById('stack-last-action');
-        const backBtn = document.getElementById('stack-back-btn');
-        const forwardBtn = document.getElementById('stack-forward-btn');
-        const framesList = document.getElementById('stack-frames-list');
+    renderDropdown() {
+        const dropdown = document.getElementById('history-dropdown');
+        if (!dropdown) return;
 
-        if (depthLabel) depthLabel.textContent = 'Stack Depth: ' + this.stack.length;
-        if (lastActionEl) lastActionEl.textContent = this.lastAction;
-
-        if (backBtn) {
-            backBtn.disabled = this.stack.length <= 1;
-        }
-        if (forwardBtn) {
-            forwardBtn.disabled = this.forwardStack.length === 0;
+        if (this.stack.length === 0) {
+            dropdown.innerHTML = '<div class="history-empty-msg">No recent searches</div>';
+            return;
         }
 
-        if (framesList) {
-            framesList.innerHTML = '';
-            // Render from TOP (highest index) down to BASE (index 0)
-            for (let i = this.stack.length - 1; i >= 0; i--) {
-                const frame = this.stack[i];
-                const isTop = (i === this.stack.length - 1);
+        let html = `
+            <div class="history-dropdown-header">
+                <span class="hdh-title">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Recent Searches (${this.stack.length})
+                </span>
+                ${this.stack.length > 1 ? '<button type="button" class="hdh-clear-btn" id="history-clear-btn">Clear</button>' : ''}
+            </div>
+            <div class="history-dropdown-list">
+        `;
 
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'stack-frame-item' + (isTop ? ' is-top' : '');
-                
-                const levelLabel = isTop ? 'TOP' : '#' + (i + 1);
+        // Render from TOP of stack down to bottom (LIFO order)
+        for (let i = this.stack.length - 1; i >= 0; i--) {
+            const item = this.stack[i];
+            const isCurrent = (i === this.stack.length - 1);
 
-                itemDiv.innerHTML = `
-                    <div class="sfi-lhs">
-                        <span class="sfi-level">${levelLabel}</span>
-                        <div class="sfi-details">
-                            <span class="sfi-city">${frame.name}${frame.country ? ', ' + frame.country : ''}</span>
-                            <span class="sfi-time">Visited: ${frame.timestamp}</span>
+            html += `
+                <div class="history-item ${isCurrent ? 'is-current' : ''}" data-index="${i}">
+                    <div class="hi-lhs">
+                        <span class="hi-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </span>
+                        <div>
+                            <span class="hi-city">${item.name}</span>
+                            <span class="hi-country">${item.country ? item.country : ''}</span>
                         </div>
                     </div>
-                    <div class="sfi-rhs">
-                        <span class="sfi-temp">${frame.temp}</span>
-                        ${isTop ? '<span class="sfi-tag">Active View</span>' : '<button type="button" class="sfi-jump-btn" data-id="' + frame.id + '">Pop to Here</button>'}
+                    <div class="hi-rhs">
+                        <span class="hi-temp">${item.temp}</span>
+                        ${isCurrent ? '<span class="hi-badge">Current</span>' : ''}
                     </div>
-                `;
+                </div>
+            `;
+        }
 
-                framesList.appendChild(itemDiv);
-            }
+        html += '</div>';
+        dropdown.innerHTML = html;
 
-            // Wire up "Pop to Here" buttons
-            framesList.querySelectorAll('.sfi-jump-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.dataset.id;
-                    const targetFrame = navStack.popTo(id);
-                    if (targetFrame) {
-                        fetchCityWeather(targetFrame.name, false);
+        // Clicking a past item pops the stack back to that location
+        dropdown.querySelectorAll('.history-item').forEach(el => {
+            el.addEventListener('click', () => {
+                const idx = parseInt(el.dataset.index, 10);
+                if (idx !== this.stack.length - 1) {
+                    const target = this.popTo(idx);
+                    if (target) {
+                        fetchCityWeather(target.name, false);
                     }
-                });
+                }
+                dropdown.classList.add('hidden');
+                document.getElementById('history-toggle-btn')?.classList.remove('is-active');
+            });
+        });
+
+        // Clear history button
+        const clearBtn = document.getElementById('history-clear-btn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.clearHistory();
             });
         }
     }
 }
 
-// Initialize Stack with Default Location (Berlin)
-const navStack = new NavigationHistoryStack({
+// Instantiate Stack
+const searchStack = new SearchHistoryStack({
     name: 'Berlin',
     country: 'Germany',
     temp: '25°'
 });
 
-// Attach Navigation Control Listeners
+// Wire up History Toggle Button
 document.addEventListener('DOMContentLoaded', () => {
-    navStack.render();
+    searchStack.renderDropdown();
 });
 
-const stackBackBtn = document.getElementById('stack-back-btn');
-if (stackBackBtn) {
-    stackBackBtn.addEventListener('click', () => {
-        const previous = navStack.pop();
-        if (previous) {
-            fetchCityWeather(previous.name, false);
+const historyToggleBtn = document.getElementById('history-toggle-btn');
+const historyDropdown = document.getElementById('history-dropdown');
+
+if (historyToggleBtn && historyDropdown) {
+    historyToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isHidden = historyDropdown.classList.contains('hidden');
+        if (isHidden) {
+            // Close suggestions dropdown if open
+            ui.suggestions?.classList.add('hidden');
+            searchStack.renderDropdown();
+            historyDropdown.classList.remove('hidden');
+            historyToggleBtn.classList.add('is-active');
+        } else {
+            historyDropdown.classList.add('hidden');
+            historyToggleBtn.classList.remove('is-active');
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!historyDropdown.contains(e.target) && !historyToggleBtn.contains(e.target)) {
+            historyDropdown.classList.add('hidden');
+            historyToggleBtn.classList.remove('is-active');
         }
     });
 }
 
-const stackForwardBtn = document.getElementById('stack-forward-btn');
-if (stackForwardBtn) {
-    stackForwardBtn.addEventListener('click', () => {
-        const next = navStack.forward();
-        if (next) {
-            fetchCityWeather(next.name, false);
-        }
-    });
-}
-
-const stackResetBtn = document.getElementById('stack-reset-btn');
-if (stackResetBtn) {
-    stackResetBtn.addEventListener('click', () => {
-        const base = navStack.resetToBase();
-        if (base) {
-            fetchCityWeather(base.name, false);
-        }
-    });
-}
-
-const toggleInspectorBtn = document.getElementById('toggle-stack-inspector-btn');
-const stackInspectorCard = document.getElementById('stack-inspector-card');
-if (toggleInspectorBtn && stackInspectorCard) {
-    toggleInspectorBtn.addEventListener('click', () => {
-        const isCollapsed = stackInspectorCard.classList.toggle('collapsed');
-        toggleInspectorBtn.classList.toggle('active', !isCollapsed);
-    });
-}
-
-// Initial live fetch to hydrate initial stack frame with real temperature
+// Initial hydration fetch
 fetchCityWeather('Berlin', false);

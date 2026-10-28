@@ -161,25 +161,25 @@
     </div>
   </div>
 
-  <h2>3. Selected Application to Develop: Weather Dashboard &amp; Navigation History Stack</h2>
+  <h2>3. Selected Application to Develop: Weather Dashboard &amp; Search History Stack</h2>
   <div class="project-box">
     <h3>Application Overview &amp; Stack Architecture</h3>
     <p>
-      The application is a <strong>Weather Forecast Dashboard</strong> that integrates a <strong>dual-stack navigation engine</strong> (<code>historyStack</code> and <code>forwardStack</code>) to manage user location searches and screen transitions through the <strong>LIFO (Last-In, First-Out)</strong> principle. As users search and explore weather across various global cities, each location snapshot is <strong>pushed</strong> onto the navigation history stack. When users click the "Back" button, the active city is <strong>popped</strong> from the top of the stack and transferred to the forward stack, seamlessly restoring the previous city to the view in <em>O(1)</em> time.
+      The application is a <strong>Weather Forecast Dashboard</strong> featuring an interactive search bar whose historical query cache and navigation controls are governed by an internal <strong>LIFO (Last-In, First-Out) Stack</strong>. When users search for global cities, each location state is <strong>pushed</strong> onto the search history stack. Clicking the history clock icon opens a dropdown rendering past queries in strict LIFO order, keeping the most recent search at the top of the list, while integrated back and forward controls allow immediate stack-based view restoration.
     </p>
 
     <div class="feature-list">
       <div class="feature-item">
         <span class="dot">&bull;</span>
-        <span><strong>Live Stack Visualization &amp; Depth Counter:</strong> Renders real-time stack depth (<code>Stack Depth: N</code>) and visibly marks the topmost active frame (<code>TOP / PEEK (Active View)</code>), demonstrating true LIFO state behavior.</span>
+        <span><strong>LIFO History Dropdown:</strong> Accessing the search history icon renders past queries in reverse chronological order from the top of the stack (<code>stack[top]</code> down to <code>stack[0]</code>), ensuring the most recent search is immediately accessible.</span>
       </div>
       <div class="feature-item">
         <span class="dot">&bull;</span>
-        <span><strong>Push Operation (City Search &amp; Visit):</strong> Captures weather metrics for newly searched locations, pushing a new state frame to the top of the history stack and resetting the forward stack.</span>
+        <span><strong>Push Operation (Search Query):</strong> As new locations are queried, complete weather snapshots (coordinates, temperature, atmospheric data) are <strong>pushed</strong> onto the history stack in instantaneous <em>O(1)</em> time, clearing the forward traversal stack.</span>
       </div>
       <div class="feature-item">
         <span class="dot">&bull;</span>
-        <span><strong>Pop Operation (Back Navigation):</strong> Pops the active city off the top of the stack and reveals the previous location with zero redundant API calls, updating the active viewport instantly.</span>
+        <span><strong>Pop Operation (Back Navigation):</strong> Clicking the Back button <strong>pops</strong> the active city off the top of the stack and pushes it to the forward stack, seamlessly restoring the previous city to the view in <em>O(1)</em> time with zero redundant network queries.</span>
       </div>
     </div>
   </div>
